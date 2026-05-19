@@ -1,0 +1,212 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Menu burger animation */
+.hamburger {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+#menu-toggle:active .hamburger {
+    transform: scale(0.9);
+}
+
+/* Boutons */
+button {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Inputs et textarea */
+input, select, textarea {
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Cartes d'événements */
+.carte-evenement {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Onglets */
+.onglet-btn {
+    cursor: pointer;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.onglet-btn:hover {
+    color: #3b82f6;
+}
+
+.onglet-btn.active {
+    border-bottom-color: #3b82f6;
+    color: #3b82f6;
+}
+
+/* Modales */
+#modal-inscription,
+#modal-editer-profil,
+#modal-succes,
+#modal-billet-complet {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Responsive - Mobile First */
+@media (max-width: 768px) {
+    main {
+        padding-top: 0;
+    }
+
+    .max-w-6xl {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    h1 {
+        font-size: 1.875rem !important;
+    }
+
+    h2 {
+        font-size: 1.5rem !important;
+    }
+
+    /* Masquer les images décoratives sur mobile */
+    img[alt*="placeholder"] {
+        display: none;
+    }
+}
+
+/* États des liens */
+a {
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #2563eb;
+}
+
+/* Séparation des sections */
+section {
+    display: block;
+}
+
+/* Espacement */
+.space-y-1 > * + * {
+    margin-top: 0.25rem;
+}
+
+.space-y-2 > * + * {
+    margin-top: 0.5rem;
+}
+
+.space-y-3 > * + * {
+    margin-top: 0.75rem;
+}
+
+.space-y-4 > * + * {
+    margin-top: 1rem;
+}
+
+.space-y-6 > * + * {
+    margin-top: 1.5rem;
+}
+
+/* Barre de progression */
+.bg-gray-200 {
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+}
+
+/* Badges */
+.px-2.py-1 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+/* Shadows améliorées */
+.shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* État du formulaire */
+.focus\:ring-2:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Accessibilité */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
