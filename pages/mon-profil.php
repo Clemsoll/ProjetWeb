@@ -1,10 +1,71 @@
 <?php
+session_start();
 $page_title = "Mon profil - OmnesEvent";
 include '../includes/header.php';
+
+// Vérifier si l'utilisateur est connecté
+$est_connecte = isset($_SESSION['utilisateur']);
+
+// Traiter la soumission du formulaire de login
+if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'], $_POST['mot_de_passe'])) {
+    $login = htmlspecialchars($_POST['login']);
+    $mot_de_passe = htmlspecialchars($_POST['mot_de_passe']);
+
+    // Vérifier les identifiants
+    if($login === 'Dupont' && $mot_de_passe === 'alibaba') {
+        $_SESSION['utilisateur'] = $login;
+        header('Location: mon-profil.php');
+        exit;
+    } else {
+        $erreur_login = "Login ou mot de passe incorrect";
+    }
+}
+
+// Traiter la déconnexion
+if(isset($_GET['deconnecter'])) {
+    session_destroy();
+    header('Location: mon-profil.php');
+    exit;
+}
 ?>
 
 <section class="max-w-4xl mx-auto px-4 md:px-8 py-12">
-    <h1 class="text-4xl font-bold text-gray-800 mb-8">Mon profil</h1>
+    <?php if(!$est_connecte): ?>
+        <!-- Page de login -->
+        <div class="max-w-md mx-auto">
+            <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">Connexion</h1>
+
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <?php if(isset($erreur_login)): ?>
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                        <?php echo $erreur_login; ?>
+                    </div>
+                <?php endif; ?>
+
+                <form method="POST" action="">
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Login</label>
+                        <input type="text" name="login" required class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-blue-500">
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Mot de passe</label>
+                        <input type="password" name="mot_de_passe" required class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-blue-500">
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                        Se connecter
+                    </button>
+                </form>
+
+                <p class="text-center text-sm text-gray-600 mt-6">
+                    Test : utilisez <strong>Dupont</strong> / <strong>alibaba</strong>
+                </p>
+            </div>
+        </div>
+    <?php else: ?>
+        <!-- Contenu du profil -->
+        <h1 class="text-4xl font-bold text-gray-800 mb-8">Mon profil</h1>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <aside class="md:col-span-1">
@@ -28,9 +89,9 @@ include '../includes/header.php';
                         Modifier mon profil
                     </button>
 
-                    <button class="w-full bg-gray-300 text-gray-800 py-2 rounded-lg font-semibold hover:bg-gray-400 transition">
+                    <a href="?deconnecter=1" class="block w-full bg-gray-300 text-gray-800 py-2 rounded-lg font-semibold hover:bg-gray-400 transition text-center">
                         Se déconnecter
-                    </button>
+                    </a>
                 </div>
             </div>
         </aside>
@@ -112,6 +173,7 @@ include '../includes/header.php';
             </div>
         </main>
     </div>
+    <?php endif; ?>
 
     <div id="modal-editer-profil" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-lg p-8 max-w-2xl w-full max-h-screen overflow-y-auto">
@@ -162,6 +224,7 @@ include '../includes/header.php';
     </div>
 </section>
 
+<?php if($est_connecte): ?>
 <script>
 $(document).ready(function() {
     $('#btn-editer-profil').click(function() {
@@ -185,5 +248,6 @@ $(document).ready(function() {
     });
 });
 </script>
+<?php endif; ?>
 
 <?php include '../includes/footer.php'; ?>
