@@ -55,7 +55,7 @@ include 'includes/header.php';
                 'lieu' => 'Campus Principal',
                 'association' => 'BDE',
                 'categorie' => 'soiree',
-                'image' => 'https://via.placeholder.com/300x200?text=Soiree+BDE',
+                'image' => '/images/Soiree.webp',
                 'inscrits' => 45,
                 'capacite' => 100,
                 'description' => 'Grande soirée d\'intégration avec tous les membres du BDE.'
@@ -68,7 +68,7 @@ include 'includes/header.php';
                 'lieu' => 'Terrain de sport',
                 'association' => 'BDS',
                 'categorie' => 'sport',
-                'image' => 'https://via.placeholder.com/300x200?text=Foot',
+                'image' => '/images/foot.webp',
                 'inscrits' => 30,
                 'capacite' => 50,
                 'description' => 'Tournoi inter-classes de football 5 contre 5.'
@@ -81,7 +81,7 @@ include 'includes/header.php';
                 'lieu' => 'Amphithéâtre A',
                 'association' => 'Junior Entreprise',
                 'categorie' => 'culture',
-                'image' => 'https://via.placeholder.com/300x200?text=Conference',
+                'image' => '/images/reunion.webp',
                 'inscrits' => 120,
                 'capacite' => 200,
                 'description' => 'Conférence sur l\'intelligence artificielle et ses applications.'

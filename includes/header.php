@@ -12,7 +12,7 @@
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="flex items-center justify-between p-4 md:px-8">
             <a href="/index.php" class="flex items-center">
-                <img src="/images/logoOE.webp" alt="OmnesEvent Logo" class="h-12 w-auto">
+                <img src="/images/logoOE.webp" alt="OmnesEvent Logo" class="h-32 w-auto">
             </a>
 
             <button id="menu-toggle" class="md:hidden text-3xl text-gray-700">
