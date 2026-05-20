@@ -137,7 +137,7 @@ include __DIR__ . '/../includes/header.php';
                                     href="<?= e(url('pages/detail-evenement.php?id=' . (int) $event['id'])) ?>"
                                     class="mt-5 block rounded-lg bg-slate-900 px-4 py-2.5 text-center font-semibold text-white hover:bg-slate-700"
                                 >
-                                    Détail de l événement
+                                    Détail de l'événement
                                 </a>
                             </div>
                         </article>

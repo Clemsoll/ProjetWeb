@@ -5,7 +5,7 @@
             <div>
                 <h3 class="mb-3 text-lg font-bold">OmnesEvent</h3>
                 <p class="text-sm text-slate-300">
-                    La plateforme simple d Omnes Education pour découvrir, réserver et gérer des événements étudiants.
+                    La plateforme simple d'Omnes Education pour découvrir, réserver et gérer des événements étudiants.
                 </p>
             </div>
 
