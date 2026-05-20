@@ -44,9 +44,14 @@ include __DIR__ . '/../includes/header.php';
 ?>
 
 <section class="mx-auto max-w-6xl px-4 py-12 md:px-8">
-    <div class="mb-8">
-        <h1 class="text-4xl font-bold text-slate-900">Catalogue des événements</h1>
-        <p class="mt-2 text-slate-600">Filtrez les événements à venir par date, catégorie ou association.</p>
+    <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+            <h1 class="text-4xl font-bold text-slate-900">Catalogue des evenements</h1>
+            <p class="mt-2 text-slate-600">Filtrez les evenements a venir par date, categorie ou association.</p>
+        </div>
+        <a href="<?= e(url('pages/calendrier.php')) ?>" class="rounded-lg bg-white px-5 py-3 font-semibold text-slate-800 ring-1 ring-slate-300 hover:bg-slate-100">
+            Ouvrir le calendrier
+        </a>
     </div>
 
     <div class="grid gap-8 lg:grid-cols-[280px,1fr]">
@@ -55,10 +60,10 @@ include __DIR__ . '/../includes/header.php';
                 <h2 class="mb-5 text-lg font-bold text-slate-900">Filtres</h2>
 
                 <div class="mb-5">
-                    <label for="categorie" class="mb-2 block text-sm font-semibold text-slate-700">Catégorie</label>
+                    <label for="categorie" class="mb-2 block text-sm font-semibold text-slate-700">Categorie</label>
                     <select id="categorie" name="categorie" class="w-full rounded-lg border border-slate-300 px-3 py-2">
                         <option value="">Toutes</option>
-                        <option value="soiree" <?= $categoryFilter === 'Soirée' ? 'selected' : '' ?>>Soirée</option>
+                        <option value="soiree" <?= $categoryFilter === 'Soiree' ? 'selected' : '' ?>>Soiree</option>
                         <option value="sport" <?= $categoryFilter === 'Sport' ? 'selected' : '' ?>>Sport</option>
                         <option value="culture" <?= $categoryFilter === 'Culture' ? 'selected' : '' ?>>Culture</option>
                     </select>
@@ -84,7 +89,7 @@ include __DIR__ . '/../includes/header.php';
                         Appliquer
                     </button>
                     <a href="<?= e(url('pages/catalogue.php')) ?>" class="block rounded-lg bg-slate-200 px-4 py-2.5 text-center font-semibold text-slate-800 hover:bg-slate-300">
-                        Réinitialiser
+                        Reinitialiser
                     </a>
                 </div>
             </form>
@@ -93,14 +98,14 @@ include __DIR__ . '/../includes/header.php';
         <div>
             <?php if ($events === []): ?>
                 <div class="rounded-2xl bg-white p-10 text-center shadow-sm ring-1 ring-slate-200">
-                    <p class="text-lg font-semibold text-slate-800">Aucun événement ne correspond à votre recherche.</p>
-                    <p class="mt-2 text-sm text-slate-600">Essayez d'élargir vos filtres ou revenez plus tard.</p>
+                    <p class="text-lg font-semibold text-slate-800">Aucun evenement ne correspond a votre recherche.</p>
+                    <p class="mt-2 text-sm text-slate-600">Essayez d elargir vos filtres ou revenez plus tard.</p>
                 </div>
             <?php else: ?>
                 <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                     <?php foreach ($events as $event): ?>
                         <?php
-                        $reserved = (int) $event['places_reservees'];
+                        $reserved = event_reserved_places($event, $pdo);
                         $capacity = (int) $event['capacite_max'];
                         $remaining = max(0, $capacity - $reserved);
                         [$badgeClass, $badgeLabel] = event_badge($event['statut'], $reserved, $capacity);
@@ -125,13 +130,14 @@ include __DIR__ . '/../includes/header.php';
                                     <p><?= e(format_event_date($event['date_evenement'])) ?></p>
                                     <p><?= e($event['lieu']) ?></p>
                                     <p><?= e($remaining) ?> place(s) restante(s)</p>
+                                    <p class="font-semibold"><?= e(format_price(event_price($event))) ?></p>
                                 </div>
 
                                 <a
                                     href="<?= e(url('pages/detail-evenement.php?id=' . (int) $event['id'])) ?>"
                                     class="mt-5 block rounded-lg bg-slate-900 px-4 py-2.5 text-center font-semibold text-white hover:bg-slate-700"
                                 >
-                                    Détail de l'événement
+                                    Detail de l evenement
                                 </a>
                             </div>
                         </article>

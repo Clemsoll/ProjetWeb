@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $event = fetch_event_by_id($pdo, $eventId);
 
     if ($event === null || !can_manage_event($event, $user)) {
-        set_flash('error', 'Vous ne pouvez pas modifier cet événement.');
+        set_flash('error', 'Vous ne pouvez pas modifier cet evenement.');
         redirect_to('pages/dashboard-organisateur.php');
     }
 
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'id' => $eventId,
         ]);
 
-        set_flash('success', $newStatus === 'annule' ? 'Événement annulé.' : 'Événement réactivé.');
+        set_flash('success', $newStatus === 'annule' ? 'Evenement annule.' : 'Evenement reactive.');
         redirect_to('pages/dashboard-organisateur.php');
     }
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare('DELETE FROM evenements WHERE id = :id');
         $stmt->execute(['id' => $eventId]);
 
-        set_flash('success', 'Événement supprimé définitivement.');
+        set_flash('success', 'Evenement supprime definitivement.');
         redirect_to('pages/dashboard-organisateur.php');
     }
 }
@@ -53,10 +53,12 @@ $stats = [
     'actifs' => 0,
     'annules' => 0,
     'inscriptions' => 0,
+    'attente' => 0,
 ];
 
 foreach ($events as $event) {
-    $stats['inscriptions'] += (int) $event['places_reservees'];
+    $stats['inscriptions'] += event_reserved_places($event, $pdo);
+    $stats['attente'] += event_waitlist_count($pdo, (int) $event['id']);
 
     if ($event['statut'] === 'actif') {
         $stats['actifs']++;
@@ -72,44 +74,54 @@ include __DIR__ . '/../includes/header.php';
     <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
             <h1 class="text-4xl font-bold text-slate-900">Dashboard organisateur</h1>
-            <p class="mt-2 text-slate-600">Gérez vos événements, consultez les inscrits et validez leur présence.</p>
+            <p class="mt-2 text-slate-600">Gerez vos evenements, vos paiements simules, les listes d attente et la validation des billets.</p>
         </div>
-        <a href="<?= e(url('pages/creer-evenement.php')) ?>" class="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700">
-            Créer un nouvel événement
-        </a>
+        <div class="flex flex-wrap gap-3">
+            <a href="<?= e(url('pages/creer-evenement.php')) ?>" class="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700">
+                Creer un nouvel evenement
+            </a>
+            <a href="<?= e(url('pages/verification-billet.php')) ?>" class="rounded-lg bg-white px-6 py-3 font-semibold text-slate-800 ring-1 ring-slate-300 hover:bg-slate-100">
+                Verifier un billet
+            </a>
+        </div>
     </div>
 
-    <div class="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-            <p class="text-sm text-slate-500">Événements créés</p>
+            <p class="text-sm text-slate-500">Evenements crees</p>
             <p class="mt-2 text-3xl font-bold text-slate-900"><?= e((string) $stats['total']) ?></p>
         </div>
         <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-            <p class="text-sm text-slate-500">Événements actifs</p>
+            <p class="text-sm text-slate-500">Evenements actifs</p>
             <p class="mt-2 text-3xl font-bold text-slate-900"><?= e((string) $stats['actifs']) ?></p>
         </div>
         <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-            <p class="text-sm text-slate-500">Événements annulés</p>
+            <p class="text-sm text-slate-500">Evenements annules</p>
             <p class="mt-2 text-3xl font-bold text-slate-900"><?= e((string) $stats['annules']) ?></p>
         </div>
         <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-            <p class="text-sm text-slate-500">Inscriptions totales</p>
+            <p class="text-sm text-slate-500">Inscriptions</p>
             <p class="mt-2 text-3xl font-bold text-slate-900"><?= e((string) $stats['inscriptions']) ?></p>
+        </div>
+        <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+            <p class="text-sm text-slate-500">Liste d attente</p>
+            <p class="mt-2 text-3xl font-bold text-slate-900"><?= e((string) $stats['attente']) ?></p>
         </div>
     </div>
 
     <div class="space-y-5">
         <?php if ($events === []): ?>
             <div class="rounded-2xl bg-white p-10 text-center shadow-sm ring-1 ring-slate-200">
-                <p class="text-slate-600">Vous n'avez pas encore créé d'événement.</p>
+                <p class="text-slate-600">Vous n avez pas encore cree d evenement.</p>
             </div>
         <?php endif; ?>
 
         <?php foreach ($events as $event): ?>
             <?php
-            $reserved = (int) $event['places_reservees'];
+            $reserved = event_reserved_places($event, $pdo);
             $capacity = (int) $event['capacite_max'];
             $remaining = max(0, $capacity - $reserved);
+            $waitlistCount = event_waitlist_count($pdo, (int) $event['id']);
             ?>
             <article class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
                 <div class="flex flex-col gap-5 lg:flex-row lg:items-start">
@@ -121,8 +133,9 @@ include __DIR__ . '/../includes/header.php';
                                 <div class="flex flex-wrap gap-2">
                                     <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700"><?= e($event['categorie']) ?></span>
                                     <span class="rounded-full px-3 py-1 text-xs font-semibold <?= $event['statut'] === 'actif' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700' ?>">
-                                        <?= e($event['statut'] === 'actif' ? 'Actif' : 'Annulé') ?>
+                                        <?= e($event['statut'] === 'actif' ? 'Actif' : 'Annule') ?>
                                     </span>
+                                    <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700"><?= e(format_price(event_price($event))) ?></span>
                                 </div>
                                 <h2 class="mt-3 text-2xl font-bold text-slate-900"><?= e($event['titre']) ?></h2>
                                 <p class="mt-1 text-sm text-slate-500"><?= e($event['association']) ?></p>
@@ -132,6 +145,7 @@ include __DIR__ . '/../includes/header.php';
                                 <p><?= e($event['lieu']) ?></p>
                                 <p><?= e($reserved) ?> / <?= e($capacity) ?> inscrits</p>
                                 <p><?= e($remaining) ?> place(s) restante(s)</p>
+                                <p><?= e((string) $waitlistCount) ?> en attente</p>
                             </div>
                         </div>
 
@@ -139,7 +153,7 @@ include __DIR__ . '/../includes/header.php';
 
                         <div class="mt-5 flex flex-wrap gap-3">
                             <a href="<?= e(url('pages/detail-evenement.php?id=' . (int) $event['id'])) ?>" class="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-700">
-                                Voir l'événement
+                                Voir l evenement
                             </a>
                             <a href="<?= e(url('pages/modifier-evenement.php?id=' . (int) $event['id'])) ?>" class="rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 ring-1 ring-slate-300 hover:bg-slate-100">
                                 Modifier
@@ -147,14 +161,17 @@ include __DIR__ . '/../includes/header.php';
                             <a href="<?= e(url('pages/inscrits-evenement.php?id=' . (int) $event['id'])) ?>" class="rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 ring-1 ring-slate-300 hover:bg-slate-100">
                                 Voir les inscrits
                             </a>
+                            <a href="<?= e(url('pages/verification-billet.php?event_id=' . (int) $event['id'])) ?>" class="rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 ring-1 ring-slate-300 hover:bg-slate-100">
+                                Verifier un billet
+                            </a>
                             <form method="post">
                                 <input type="hidden" name="action" value="toggle_event_status">
                                 <input type="hidden" name="event_id" value="<?= e((string) $event['id']) ?>">
                                 <button type="submit" class="rounded-lg <?= $event['statut'] === 'actif' ? 'bg-red-100 text-red-700 hover:bg-red-200' : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' ?> px-4 py-2.5 text-sm font-semibold">
-                                    <?= e($event['statut'] === 'actif' ? 'Annuler' : 'Réactiver') ?>
+                                    <?= e($event['statut'] === 'actif' ? 'Annuler' : 'Reactiver') ?>
                                 </button>
                             </form>
-                            <form method="post" onsubmit="return confirm('Supprimer définitivement cet événement ?');">
+                            <form method="post" onsubmit="return confirm('Supprimer definitivement cet evenement ?');">
                                 <input type="hidden" name="action" value="delete_event">
                                 <input type="hidden" name="event_id" value="<?= e((string) $event['id']) ?>">
                                 <button type="submit" class="rounded-lg bg-red-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-800">

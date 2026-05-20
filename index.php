@@ -22,20 +22,23 @@ include __DIR__ . '/includes/header.php';
 <section class="bg-gradient-to-r from-blue-700 to-slate-900 text-white">
     <div class="mx-auto max-w-6xl px-4 py-16 md:px-8 md:py-24">
         <div class="max-w-3xl">
-            <p class="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-blue-200">Billetterie étudiante Omnes</p>
+            <p class="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-blue-200">Billetterie etudiante Omnes</p>
             <h1 class="mb-5 text-4xl font-bold leading-tight md:text-5xl">
-                Découvrez les événements Omnes et réservez vos places en quelques clics.
+                Decouvrez les evenements Omnes et reservez vos places en quelques clics.
             </h1>
             <p class="text-lg text-blue-100">
-                OmnesEvent centralise les soirées, événements sportifs et rendez-vous culturels des associations étudiantes.
+                OmnesEvent centralise les soirees, evenements sportifs et rendez-vous culturels des associations etudiantes.
             </p>
             <div class="mt-8 flex flex-wrap gap-3">
                 <a href="<?= e(url('pages/catalogue.php')) ?>" class="rounded-lg bg-white px-6 py-3 font-semibold text-blue-700 hover:bg-blue-50">
                     Explorer le catalogue
                 </a>
+                <a href="<?= e(url('pages/calendrier.php')) ?>" class="rounded-lg border border-blue-200 px-6 py-3 font-semibold text-white hover:bg-white/10">
+                    Voir le calendrier
+                </a>
                 <?php if (!is_logged_in()): ?>
                     <a href="<?= e(url('pages/register.php')) ?>" class="rounded-lg border border-blue-200 px-6 py-3 font-semibold text-white hover:bg-white/10">
-                        Créer un compte
+                        Creer un compte
                     </a>
                 <?php endif; ?>
             </div>
@@ -47,10 +50,10 @@ include __DIR__ . '/includes/header.php';
     <form method="get" action="<?= e(url('pages/catalogue.php')) ?>" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
         <div class="grid gap-4 md:grid-cols-4">
             <div>
-                <label for="categorie" class="mb-2 block text-sm font-semibold text-slate-700">Catégorie</label>
+                <label for="categorie" class="mb-2 block text-sm font-semibold text-slate-700">Categorie</label>
                 <select id="categorie" name="categorie" class="w-full rounded-lg border border-slate-300 px-3 py-2">
                     <option value="">Toutes</option>
-                    <option value="soiree">Soirée</option>
+                    <option value="soiree">Soiree</option>
                     <option value="sport">Sport</option>
                     <option value="culture">Culture</option>
                 </select>
@@ -75,23 +78,23 @@ include __DIR__ . '/includes/header.php';
 <section class="mx-auto max-w-6xl px-4 pb-16 md:px-8">
     <div class="mb-8 flex items-center justify-between gap-4">
         <div>
-            <h2 class="text-3xl font-bold text-slate-900">Événements à venir</h2>
-            <p class="mt-2 text-slate-600">Les prochains rendez-vous ouverts à la réservation.</p>
+            <h2 class="text-3xl font-bold text-slate-900">Evenements a venir</h2>
+            <p class="mt-2 text-slate-600">Les prochains rendez-vous ouverts a la reservation.</p>
         </div>
         <a href="<?= e(url('pages/catalogue.php')) ?>" class="text-sm font-semibold text-blue-600 hover:text-blue-700">
-            Voir tout le catalogue →
+            Voir tout le catalogue &rarr;
         </a>
     </div>
 
     <?php if ($events === []): ?>
         <div class="rounded-2xl bg-white p-10 text-center shadow-sm ring-1 ring-slate-200">
-            <p class="text-slate-600">Aucun événement à venir pour le moment.</p>
+            <p class="text-slate-600">Aucun evenement a venir pour le moment.</p>
         </div>
     <?php else: ?>
         <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             <?php foreach ($events as $event): ?>
                 <?php
-                $reserved = (int) $event['places_reservees'];
+                $reserved = event_reserved_places($event, $pdo);
                 $capacity = (int) $event['capacite_max'];
                 [$badgeClass, $badgeLabel] = event_badge($event['statut'], $reserved, $capacity);
                 $remaining = max(0, $capacity - $reserved);
@@ -118,12 +121,13 @@ include __DIR__ . '/includes/header.php';
                             <p><?= e(format_event_date($event['date_evenement'])) ?></p>
                             <p><?= e($event['lieu']) ?></p>
                             <p><?= e($remaining) ?> place(s) restante(s)</p>
+                            <p class="font-semibold"><?= e(format_price(event_price($event))) ?></p>
                         </div>
                         <a
                             href="<?= e(url('pages/detail-evenement.php?id=' . (int) $event['id'])) ?>"
                             class="mt-5 block rounded-lg bg-slate-900 px-4 py-2.5 text-center font-semibold text-white hover:bg-slate-700"
                         >
-                            Voir le détail
+                            Voir le detail
                         </a>
                     </div>
                 </article>

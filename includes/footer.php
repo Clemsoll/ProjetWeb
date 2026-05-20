@@ -5,31 +5,31 @@
             <div>
                 <h3 class="mb-3 text-lg font-bold">OmnesEvent</h3>
                 <p class="text-sm text-slate-300">
-                    La plateforme simple d'Omnes Education pour découvrir, réserver et gérer des événements étudiants.
+                    La plateforme simple d Omnes Education pour decouvrir, reserver et gerer des evenements etudiants.
                 </p>
             </div>
 
             <div>
-                <h4 class="mb-3 text-lg font-bold">Catégories</h4>
+                <h4 class="mb-3 text-lg font-bold">Categories</h4>
                 <ul class="space-y-2 text-sm text-slate-300">
-                    <li><a href="<?= e(url('pages/catalogue.php?categorie=soiree')) ?>" class="hover:text-white">Soirée</a></li>
+                    <li><a href="<?= e(url('pages/catalogue.php?categorie=soiree')) ?>" class="hover:text-white">Soiree</a></li>
                     <li><a href="<?= e(url('pages/catalogue.php?categorie=sport')) ?>" class="hover:text-white">Sport</a></li>
                     <li><a href="<?= e(url('pages/catalogue.php?categorie=culture')) ?>" class="hover:text-white">Culture</a></li>
                 </ul>
             </div>
 
             <div>
-                <h4 class="mb-3 text-lg font-bold">Accès rapide</h4>
+                <h4 class="mb-3 text-lg font-bold">Acces rapide</h4>
                 <ul class="space-y-2 text-sm text-slate-300">
                     <li><a href="<?= e(url('pages/catalogue.php')) ?>" class="hover:text-white">Catalogue</a></li>
+                    <li><a href="<?= e(url('pages/calendrier.php')) ?>" class="hover:text-white">Calendrier</a></li>
                     <li><a href="<?= e(url('pages/login.php')) ?>" class="hover:text-white">Connexion</a></li>
-                    <li><a href="<?= e(url('pages/register.php')) ?>" class="hover:text-white">Créer un compte</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="border-t border-slate-800 px-4 py-4 text-center text-sm text-slate-400">
-            © <?= e(date('Y')) ?> OmnesEvent. Projet étudiant PHP/MySQL.
+            &copy; <?= e(date('Y')) ?> OmnesEvent. Projet etudiant PHP/MySQL.
         </div>
     </footer>
 

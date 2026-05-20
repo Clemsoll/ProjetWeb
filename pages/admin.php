@@ -229,7 +229,7 @@ include __DIR__ . '/../includes/header.php';
                                     <?= e($event['statut']) ?>
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-slate-600"><?= e((string) $event['places_reservees']) ?></td>
+                            <td class="px-6 py-4 text-sm text-slate-600"><?= e((string) event_reserved_places($event, $pdo)) ?></td>
                             <td class="px-6 py-4">
                                 <div class="flex flex-wrap gap-2">
                                     <form method="post">
