@@ -9,16 +9,16 @@ $eventId = isset($_GET['event_id']) ? (int) $_GET['event_id'] : 0;
 $event = fetch_event_by_id($pdo, $eventId);
 
 if ($event === null) {
-    set_flash('error', 'Evenement introuvable.');
+    set_flash('error', 'Événement introuvable.');
     redirect_to('pages/catalogue.php');
 }
 
 if (!event_is_paid($event)) {
-    set_flash('info', 'Cet evenement est gratuit. Vous pouvez reserver directement.');
+    set_flash('info', 'Cet événement est gratuit. Vous pouvez réserver directement.');
     redirect_to('pages/detail-evenement.php?id=' . $eventId);
 }
 
-$page_title = 'Paiement simule';
+$page_title = 'Paiement simulé';
 $user = current_user();
 $error = '';
 
@@ -36,7 +36,7 @@ $reservationStmt->execute([
 $existingReservation = $reservationStmt->fetch() ?: null;
 
 if ($existingReservation !== null && $existingReservation['statut'] === 'reserve') {
-    set_flash('info', 'Vous etes deja inscrit a cet evenement.');
+    set_flash('info', 'Vous êtes déjà inscrit à cet événement.');
     redirect_to('pages/detail-evenement.php?id=' . $eventId);
 }
 
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $lockedReservation = $reservationLockStmt->fetch();
 
             if ($lockedReservation !== false && $lockedReservation['statut'] === 'reserve') {
-                throw new RuntimeException('Vous etes deja inscrit a cet evenement.');
+                throw new RuntimeException('Vous êtes déjà inscrit à cet événement.');
             }
 
             $eventLockStmt = $pdo->prepare(
@@ -81,11 +81,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $lockedEvent = $eventLockStmt->fetch();
 
             if ($lockedEvent === false) {
-                throw new RuntimeException('Evenement introuvable.');
+                throw new RuntimeException('Événement introuvable.');
             }
 
             if ($lockedEvent['statut'] === 'annule') {
-                throw new RuntimeException('Impossible de payer un evenement annule.');
+                throw new RuntimeException('Impossible de payer un événement annulé.');
             }
 
             $capacityStmt = $pdo->prepare(
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $capacityStmt->execute(['id' => $eventId]);
 
             if ($capacityStmt->rowCount() !== 1) {
-                throw new RuntimeException('Cet evenement est complet. Vous pouvez rejoindre la liste d attente depuis la page detail.');
+                throw new RuntimeException('Cet événement est complet. Vous pouvez rejoindre la liste d’attente depuis la page détail.');
             }
 
             $paymentReference = 'PAY-' . strtoupper(substr(bin2hex(random_bytes(6)), 0, 12));
@@ -161,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
 
             $pdo->commit();
-            set_flash('success', 'Paiement simule valide. Votre billet est confirme.');
+            set_flash('success', 'Paiement simulé validé. Votre billet est confirmé.');
             redirect_to('pages/mes-billets.php');
         } catch (Throwable $exception) {
             if ($pdo->inTransaction()) {
@@ -178,8 +178,8 @@ include __DIR__ . '/../includes/header.php';
 
 <section class="mx-auto max-w-4xl px-4 py-12 md:px-8">
     <div class="mb-8">
-        <a href="<?= e(url('pages/detail-evenement.php?id=' . $eventId)) ?>" class="text-sm font-semibold text-blue-600 hover:text-blue-700">&larr; Retour a l evenement</a>
-        <h1 class="mt-3 text-4xl font-bold text-slate-900">Paiement simule</h1>
+        <a href="<?= e(url('pages/detail-evenement.php?id=' . $eventId)) ?>" class="text-sm font-semibold text-blue-600 hover:text-blue-700">&larr; Retour à l’événement</a>
+        <h1 class="mt-3 text-4xl font-bold text-slate-900">Paiement simulé</h1>
         <p class="mt-2 text-slate-600">Cette page simule un paiement en ligne pour valider votre billet.</p>
     </div>
 
@@ -198,7 +198,7 @@ include __DIR__ . '/../includes/header.php';
                 </div>
 
                 <div>
-                    <label for="numero_carte" class="mb-2 block text-sm font-semibold text-slate-700">Numero de carte</label>
+                    <label for="numero_carte" class="mb-2 block text-sm font-semibold text-slate-700">Numéro de carte</label>
                     <input type="text" id="numero_carte" name="numero_carte" value="<?= e(old('numero_carte', '4242 4242 4242 4242')) ?>" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
                 </div>
 
@@ -220,7 +220,7 @@ include __DIR__ . '/../includes/header.php';
         </div>
 
         <aside class="rounded-3xl bg-slate-900 p-6 text-white">
-            <p class="text-sm font-semibold uppercase tracking-[0.25em] text-blue-200">Recapitulatif</p>
+            <p class="text-sm font-semibold uppercase tracking-[0.25em] text-blue-200">Récapitulatif</p>
             <h2 class="mt-4 text-2xl font-bold"><?= e($event['titre']) ?></h2>
             <div class="mt-5 space-y-2 text-sm text-slate-200">
                 <p><?= e(format_event_date($event['date_evenement'])) ?></p>
@@ -234,7 +234,7 @@ include __DIR__ . '/../includes/header.php';
             </div>
 
             <p class="mt-6 text-sm text-slate-300">
-                Paiement 100 % simule pour le projet. Aucune transaction bancaire reelle n est effectuee.
+                Paiement 100 % simulé pour le projet. Aucune transaction bancaire réelle n’est effectuée.
             </p>
         </aside>
     </div>

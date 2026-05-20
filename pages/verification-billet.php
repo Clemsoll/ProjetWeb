@@ -5,7 +5,7 @@ require_once __DIR__ . '/../includes/bootstrap.php';
 
 require_role(['organisateur', 'administrateur']);
 
-$page_title = 'Verification billet';
+$page_title = 'Vérification billet';
 $token = trim((string) ($_GET['token'] ?? $_POST['token'] ?? ''));
 $eventFilterId = isset($_GET['event_id']) ? (int) $_GET['event_id'] : 0;
 $error = '';
@@ -32,14 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'valid
     $ticketToValidate = $ticketStmt->fetch();
 
     if ($ticketToValidate === false || !can_manage_event($ticketToValidate)) {
-        set_flash('error', 'Billet introuvable ou non autorise.');
+        set_flash('error', 'Billet introuvable ou non autorisé.');
         redirect_to('pages/verification-billet.php');
     }
 
     $updateStmt = $pdo->prepare('UPDATE reservations SET presence_validee = 1 WHERE id = :id AND statut = "reserve"');
     $updateStmt->execute(['id' => $reservationId]);
 
-    set_flash('success', 'Presence validee avec succes.');
+    set_flash('success', 'Présence validée avec succès.');
     redirect_to('pages/verification-billet.php?token=' . urlencode((string) $ticketToValidate['qr_token']));
 }
 
@@ -71,10 +71,10 @@ if ($token !== '') {
     $ticket = $ticketStmt->fetch() ?: null;
 
     if ($ticket === null) {
-        $error = 'Aucun billet ne correspond a ce QR token.';
+        $error = 'Aucun billet ne correspond à ce QR token.';
     } elseif (!can_manage_event($ticket)) {
         $ticket = null;
-        $error = 'Vous ne pouvez pas verifier ce billet.';
+        $error = 'Vous ne pouvez pas vérifier ce billet.';
     }
 }
 
@@ -83,8 +83,8 @@ include __DIR__ . '/../includes/header.php';
 
 <section class="mx-auto max-w-4xl px-4 py-12 md:px-8">
     <div class="mb-8">
-        <h1 class="text-4xl font-bold text-slate-900">Verification de billet</h1>
-        <p class="mt-2 text-slate-600">Utilisez le QR token d un billet pour verifier rapidement une reservation et valider la presence.</p>
+        <h1 class="text-4xl font-bold text-slate-900">Vérification de billet</h1>
+        <p class="mt-2 text-slate-600">Utilisez le QR token d’un billet pour vérifier rapidement une réservation et valider la présence.</p>
     </div>
 
     <div class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
@@ -120,20 +120,20 @@ include __DIR__ . '/../includes/header.php';
                             <p>E-mail : <?= e($ticket['email']) ?></p>
                             <p>Date : <?= e(format_event_date($ticket['date_evenement'])) ?></p>
                             <p>Lieu : <?= e($ticket['lieu']) ?></p>
-                            <p>Reference : <span class="font-semibold"><?= e(reservation_reference((int) $ticket['id'], (int) $ticket['evenement_id'])) ?></span></p>
+                            <p>Référence : <span class="font-semibold"><?= e(reservation_reference((int) $ticket['id'], (int) $ticket['evenement_id'])) ?></span></p>
                             <p>QR token : <span class="font-semibold"><?= e((string) $ticket['qr_token']) ?></span></p>
                         </div>
                     </div>
 
                     <div class="space-y-3">
                         <span class="block rounded-full px-3 py-1 text-center text-xs font-semibold <?= $ticket['statut'] === 'reserve' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700' ?>">
-                            <?= e($ticket['statut'] === 'reserve' ? 'Reservation active' : 'Reservation annulee') ?>
+                            <?= e($ticket['statut'] === 'reserve' ? 'Réservation active' : 'Réservation annulée') ?>
                         </span>
                         <span class="block rounded-full px-3 py-1 text-center text-xs font-semibold <?= ($ticket['payment_status'] ?? 'non_requis') === 'paye' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-700' ?>">
-                            <?= e(($ticket['payment_status'] ?? 'non_requis') === 'paye' ? 'Paiement paye' : 'Paiement non requis') ?>
+                            <?= e(($ticket['payment_status'] ?? 'non_requis') === 'paye' ? 'Paiement payé' : 'Paiement non requis') ?>
                         </span>
                         <span class="block rounded-full px-3 py-1 text-center text-xs font-semibold <?= (int) $ticket['presence_validee'] === 1 ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' ?>">
-                            <?= e((int) $ticket['presence_validee'] === 1 ? 'Presence deja validee' : 'Presence non validee') ?>
+                            <?= e((int) $ticket['presence_validee'] === 1 ? 'Présence déjà validée' : 'Présence non validée') ?>
                         </span>
                     </div>
                 </div>
@@ -144,7 +144,7 @@ include __DIR__ . '/../includes/header.php';
                         <input type="hidden" name="reservation_id" value="<?= e((string) $ticket['id']) ?>">
                         <input type="hidden" name="token" value="<?= e((string) $ticket['qr_token']) ?>">
                         <button type="submit" class="rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700">
-                            Valider la presence
+                            Valider la présence
                         </button>
                     </form>
                 <?php endif; ?>

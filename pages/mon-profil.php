@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $confirmPassword = (string) ($_POST['confirm_password'] ?? '');
 
     if ($prenom === '' || $nom === '' || $email === '') {
-        $error = 'Le prénom, le nom et l\'e-mail sont obligatoires.';
+        $error = 'Le prénom, le nom et l e-mail sont obligatoires.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Adresse e-mail invalide.';
     } else {
@@ -180,7 +180,7 @@ include __DIR__ . '/../includes/header.php';
 
         <div class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
             <h2 class="text-2xl font-bold text-slate-900">Modifier mes informations</h2>
-            <p class="mt-2 text-sm text-slate-600">Le mot de passe n'est modifié que si vous renseignez les champs dédiés.</p>
+            <p class="mt-2 text-sm text-slate-600">Le mot de passe n’est modifié que si vous renseignez les champs dédiés.</p>
 
             <?php if ($error !== ''): ?>
                 <div class="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">

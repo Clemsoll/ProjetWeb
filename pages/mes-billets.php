@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $lockedReservation = $lockStmt->fetch();
 
             if ($lockedReservation === false) {
-                throw new RuntimeException('Reservation introuvable ou deja terminee.');
+                throw new RuntimeException('Réservation introuvable ou déjà terminée.');
             }
 
             $updateStmt = $pdo->prepare('UPDATE reservations SET statut = "annule", presence_validee = 0 WHERE id = :id');
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             promote_waitlist($pdo, (int) $lockedReservation['evenement_id']);
 
             $pdo->commit();
-            set_flash('success', 'Votre reservation a bien ete annulee.');
+            set_flash('success', 'Votre réservation a bien été annulée.');
         } catch (Throwable $exception) {
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'user_id' => $user['id'],
         ]);
 
-        set_flash($stmt->rowCount() === 1 ? 'success' : 'error', $stmt->rowCount() === 1 ? 'Vous avez quitte la liste d attente.' : 'Inscription en liste d attente introuvable.');
+        set_flash($stmt->rowCount() === 1 ? 'success' : 'error', $stmt->rowCount() === 1 ? 'Vous avez quitté la liste d’attente.' : 'Inscription en liste d’attente introuvable.');
         redirect_to('pages/mes-billets.php');
     }
 }
@@ -144,13 +144,13 @@ include __DIR__ . '/../includes/header.php';
 <section class="mx-auto max-w-6xl px-4 py-12 md:px-8">
     <div class="mb-8">
         <h1 class="text-4xl font-bold text-slate-900">Mes billets</h1>
-        <p class="mt-2 text-slate-600">Retrouvez vos reservations a venir, vos anciens billets et vos listes d attente.</p>
+        <p class="mt-2 text-slate-600">Retrouvez vos réservations à venir, vos anciens billets et vos listes d’attente.</p>
     </div>
 
     <?php if ($waitlistEntries !== []): ?>
         <div class="mb-10 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <div class="mb-5 flex items-center justify-between gap-3">
-                <h2 class="text-2xl font-bold text-slate-900">Mes listes d attente</h2>
+                <h2 class="text-2xl font-bold text-slate-900">Mes listes d’attente</h2>
                 <span class="rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-700"><?= e((string) count($waitlistEntries)) ?></span>
             </div>
 
@@ -176,7 +176,7 @@ include __DIR__ . '/../includes/header.php';
                                 </div>
                                 <div class="mt-4 flex flex-wrap gap-3">
                                     <a href="<?= e(url('pages/detail-evenement.php?id=' . (int) $entry['evenement_id'])) ?>" class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">
-                                        Voir l evenement
+                                        Voir l’événement
                                     </a>
                                     <form method="post">
                                         <input type="hidden" name="action" value="cancel_waitlist">
@@ -197,23 +197,23 @@ include __DIR__ . '/../includes/header.php';
     <div class="grid gap-10 lg:grid-cols-2">
         <div>
             <div class="mb-5 flex items-center justify-between gap-3">
-                <h2 class="text-2xl font-bold text-slate-900">Evenements a venir</h2>
+                <h2 class="text-2xl font-bold text-slate-900">Événements à venir</h2>
                 <span class="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700"><?= e((string) count($upcomingReservations)) ?></span>
             </div>
 
             <div class="space-y-5">
                 <?php if ($upcomingReservations === []): ?>
                     <div class="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-slate-200">
-                        <p class="text-slate-600">Aucune reservation a venir.</p>
+                        <p class="text-slate-600">Aucune réservation à venir.</p>
                         <a href="<?= e(url('pages/catalogue.php')) ?>" class="mt-4 inline-block font-semibold text-blue-600 hover:text-blue-700">
-                            Decouvrir les evenements
+                            Découvrir les événements
                         </a>
                     </div>
                 <?php endif; ?>
 
                 <?php foreach ($upcomingReservations as $reservation): ?>
                     <?php
-                    $reservationStatus = $reservation['statut'] === 'reserve' ? 'Reserve' : 'Annule';
+                    $reservationStatus = $reservation['statut'] === 'reserve' ? 'Réservé' : 'Annulé';
                     $reservationClass = $reservation['statut'] === 'reserve'
                         ? 'bg-emerald-100 text-emerald-700'
                         : 'bg-slate-200 text-slate-700';
@@ -234,7 +234,7 @@ include __DIR__ . '/../includes/header.php';
                                             <?= e($reservationStatus) ?>
                                         </span>
                                         <?php if ($reservation['evenement_statut'] === 'annule'): ?>
-                                            <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">Evenement annule</span>
+                                            <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">Événement annulé</span>
                                         <?php endif; ?>
                                         <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700"><?= e(format_price((float) $reservation['prix'])) ?></span>
                                     </div>
@@ -243,8 +243,8 @@ include __DIR__ . '/../includes/header.php';
                                 <div class="mt-4 space-y-1 text-sm text-slate-700">
                                     <p><?= e(format_event_date($reservation['date_evenement'])) ?></p>
                                     <p><?= e($reservation['lieu']) ?></p>
-                                    <p>Reference billet : <span class="font-semibold"><?= e(reservation_reference((int) $reservation['id'], (int) $reservation['evenement_id'])) ?></span></p>
-                                    <p>Statut paiement : <span class="font-semibold"><?= e($reservation['payment_status'] === 'paye' ? 'Paye' : 'Non requis') ?></span></p>
+                                    <p>Référence billet : <span class="font-semibold"><?= e(reservation_reference((int) $reservation['id'], (int) $reservation['evenement_id'])) ?></span></p>
+                                    <p>Statut paiement : <span class="font-semibold"><?= e($reservation['payment_status'] === 'paye' ? 'Payé' : 'Non requis') ?></span></p>
                                 </div>
 
                                 <div class="mt-4 flex flex-wrap items-center gap-4">
@@ -254,7 +254,7 @@ include __DIR__ . '/../includes/header.php';
 
                                 <div class="mt-5 flex flex-wrap gap-3">
                                     <a href="<?= e(url('pages/detail-evenement.php?id=' . (int) $reservation['evenement_id'])) ?>" class="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-700">
-                                        Voir l evenement
+                                        Voir l’événement
                                     </a>
 
                                     <?php if ($reservation['statut'] === 'reserve' && $reservation['evenement_statut'] === 'actif'): ?>
@@ -262,7 +262,7 @@ include __DIR__ . '/../includes/header.php';
                                             <input type="hidden" name="action" value="cancel_reservation">
                                             <input type="hidden" name="reservation_id" value="<?= e((string) $reservation['id']) ?>">
                                             <button type="submit" class="rounded-lg bg-red-100 px-4 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-200">
-                                                Annuler la reservation
+                                                Annuler la réservation
                                             </button>
                                         </form>
                                     <?php endif; ?>
@@ -276,7 +276,7 @@ include __DIR__ . '/../includes/header.php';
 
         <div>
             <div class="mb-5 flex items-center justify-between gap-3">
-                <h2 class="text-2xl font-bold text-slate-900">Evenements passes</h2>
+                <h2 class="text-2xl font-bold text-slate-900">Événements passés</h2>
                 <span class="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700"><?= e((string) count($pastReservations)) ?></span>
             </div>
 
@@ -302,7 +302,7 @@ include __DIR__ . '/../includes/header.php';
                                     <div class="flex flex-wrap gap-2">
                                         <span class="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">Passe</span>
                                         <?php if ((int) $reservation['presence_validee'] === 1): ?>
-                                            <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">Presence validee</span>
+                                            <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">Présence validée</span>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -310,7 +310,7 @@ include __DIR__ . '/../includes/header.php';
                                 <div class="mt-4 space-y-1 text-sm text-slate-700">
                                     <p><?= e(format_event_date($reservation['date_evenement'])) ?></p>
                                     <p><?= e($reservation['lieu']) ?></p>
-                                    <p>Reference billet : <span class="font-semibold"><?= e(reservation_reference((int) $reservation['id'], (int) $reservation['evenement_id'])) ?></span></p>
+                                    <p>Référence billet : <span class="font-semibold"><?= e(reservation_reference((int) $reservation['id'], (int) $reservation['evenement_id'])) ?></span></p>
                                     <p class="text-xs text-slate-500">QR token : <?= e($qrToken) ?></p>
                                 </div>
                             </div>

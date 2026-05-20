@@ -74,7 +74,7 @@ function has_role(array|string $roles): bool
 function require_login(): void
 {
     if (!is_logged_in()) {
-        set_flash('error', 'Veuillez vous connecter pour acceder a cette page.');
+        set_flash('error', 'Veuillez vous connecter pour accéder à cette page.');
         redirect_to('pages/login.php');
     }
 }
@@ -84,7 +84,7 @@ function require_role(array|string $roles): void
     require_login();
 
     if (!has_role($roles)) {
-        set_flash('error', 'Vous n avez pas acces a cette page.');
+        set_flash('error', 'Vous n’avez pas accès à cette page.');
         redirect_to('index.php');
     }
 }
@@ -124,7 +124,7 @@ function old(string $key, string $default = ''): string
     return isset($_POST[$key]) ? trim((string) $_POST[$key]) : $default;
 }
 
-function format_event_date(string $datetime, string $format = 'd/m/Y a H:i'): string
+function format_event_date(string $datetime, string $format = 'd/m/Y à H:i'): string
 {
     return (new DateTime($datetime))->format($format);
 }
@@ -153,6 +153,19 @@ function normalize_category(?string $value): ?string
         'Ã©' => 'e',
         'Ã¨' => 'e',
         'Ãª' => 'e',
+        'Ã«' => 'e',
+        'Ã ' => 'a',
+        'Ã¢' => 'a',
+        'Ã®' => 'i',
+        'Ã¯' => 'i',
+        'Ã´' => 'o',
+        'Ã¶' => 'o',
+        'Ã¹' => 'u',
+        'Ã»' => 'u',
+        'Ã¼' => 'u',
+        'ÃƒÂ©' => 'e',
+        'ÃƒÂ¨' => 'e',
+        'ÃƒÂª' => 'e',
     ]);
 
     return match ($normalized) {
@@ -160,6 +173,16 @@ function normalize_category(?string $value): ?string
         'sport' => 'Sport',
         'culture' => 'Culture',
         default => null,
+    };
+}
+
+function display_category(?string $category): string
+{
+    return match (normalize_category($category)) {
+        'Soiree' => 'Soirée',
+        'Sport' => 'Sport',
+        'Culture' => 'Culture',
+        default => (string) $category,
     };
 }
 
@@ -292,7 +315,7 @@ function fetch_waitlist_entry(PDO $pdo, int $eventId, int $userId): ?array
 function event_badge(string $status, int $reserved, int $capacity): array
 {
     if ($status === 'annule') {
-        return ['bg-slate-200 text-slate-700', 'Annule'];
+        return ['bg-slate-200 text-slate-700', 'Annulé'];
     }
 
     if ($reserved >= $capacity) {
@@ -550,11 +573,11 @@ function upload_event_image(array $file): ?string
     }
 
     if (($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
-        throw new RuntimeException('Le televersement de l image a echoue.');
+        throw new RuntimeException('Le téléversement de l’image a échoué.');
     }
 
     if (($file['size'] ?? 0) > 5 * 1024 * 1024) {
-        throw new RuntimeException('L image depasse la taille maximale de 5 Mo.');
+        throw new RuntimeException('L’image dépasse la taille maximale de 5 Mo.');
     }
 
     $allowedTypes = [
@@ -567,13 +590,13 @@ function upload_event_image(array $file): ?string
     $mimeType = mime_content_type($file['tmp_name']);
 
     if (!isset($allowedTypes[$mimeType])) {
-        throw new RuntimeException('Le format d image n est pas autorise.');
+        throw new RuntimeException('Le format d’image n’est pas autorisé.');
     }
 
     $directory = ROOT_PATH . '/uploads/events';
 
     if (!is_dir($directory) && !mkdir($directory, 0777, true) && !is_dir($directory)) {
-        throw new RuntimeException('Impossible de creer le dossier des images.');
+        throw new RuntimeException('Impossible de créer le dossier des images.');
     }
 
     $extension = $allowedTypes[$mimeType];
@@ -581,7 +604,7 @@ function upload_event_image(array $file): ?string
     $destination = $directory . '/' . $filename;
 
     if (!move_uploaded_file($file['tmp_name'], $destination)) {
-        throw new RuntimeException('Impossible d enregistrer l image envoyee.');
+        throw new RuntimeException('Impossible d’enregistrer l’image envoyée.');
     }
 
     return 'uploads/events/' . $filename;

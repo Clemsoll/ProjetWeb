@@ -1,6 +1,6 @@
 # OmnesEvent
 
-Projet etudiant PHP/MySQL pour consulter, reserver et gerer des evenements associatifs Omnes.
+Projet étudiant PHP/MySQL pour consulter, réserver et gérer des événements associatifs Omnes.
 
 ## Installation locale
 
@@ -11,7 +11,7 @@ Projet etudiant PHP/MySQL pour consulter, reserver et gerer des evenements assoc
 5. Importer le fichier `database/omnesevent.sql`
 6. Ouvrir `http://localhost/OmnesEvent/`
 
-## Base de donnees
+## Base de données
 
 - Nom de la base : `omnesevent`
 - Connexion PHP : `localhost`, utilisateur `root`, mot de passe vide
@@ -19,28 +19,28 @@ Projet etudiant PHP/MySQL pour consulter, reserver et gerer des evenements assoc
 ## Comptes de test
 
 - Participant : `participant@omnes.fr` / `password`
-- Organisateur valide : `organisateur@omnes.fr` / `password`
+- Organisateur validé : `organisateur@omnes.fr` / `password`
 - Administrateur : `admin@omnes.fr` / `password`
 - Organisateur en attente : `orga-attente@omnes.fr` / `password`
 
-## Fonctionnalites disponibles
+## Fonctionnalités disponibles
 
-- Inscription, connexion et deconnexion
+- Inscription, connexion et déconnexion
 - Gestion des roles `participant`, `organisateur`, `administrateur`
-- Catalogue dynamique avec filtres date, categorie et association
-- Calendrier mensuel des evenements
-- Page detail avec reservation reelle et controle des doublons/capacites
-- Paiement simule pour les evenements payants
-- Liste d attente avec promotion automatique lors d un desistement
-- QR code par billet avec page de verification organisateur
+- Catalogue dynamique avec filtres date, catégorie et association
+- Calendrier mensuel des événements
+- Page détail avec réservation réelle et contrôle des doublons/capacités
+- Paiement simulé pour les événements payants
+- Liste d’attente avec promotion automatique lors d’un désistement
+- QR code par billet avec page de vérification organisateur
 - Profil utilisateur modifiable
 - Billets du participant avec annulation simple
-- Creation, modification et annulation d evenements pour les organisateurs
-- Liste des inscrits et validation de presence
-- Tableau de bord administrateur pour gerer utilisateurs et evenements
+- Création, modification et annulation d’événements pour les organisateurs
+- Liste des inscrits et validation de présence
+- Tableau de bord administrateur pour gérer utilisateurs et événements
 
 ## Limites actuelles
 
-- Le QR code est genere via un service public d image QR. Le token du billet reste affiche comme solution de secours.
-- Le paiement est volontairement simule pour rester adapte au MVP scolaire.
-- Il n y a pas d envoi d e-mail automatique lors de la promotion depuis la liste d attente.
+- Le QR code est généré via un service public d’image QR. Le token du billet reste affiché comme solution de secours.
+- Le paiement est volontairement simulé pour rester adapté au MVP scolaire.
+- Il n’y a pas d’envoi d’e-mail automatique lors de la promotion depuis la liste d’attente.

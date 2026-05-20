@@ -7,7 +7,7 @@ $eventId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $event = fetch_event_by_id($pdo, $eventId);
 
 if ($event === null) {
-    set_flash('error', 'Evenement introuvable.');
+    set_flash('error', 'Événement introuvable.');
     redirect_to('pages/catalogue.php');
 }
 
@@ -19,12 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'reserve') {
         if ($user === null) {
-            set_flash('error', 'Connectez-vous pour reserver cet evenement.');
+            set_flash('error', 'Connectez-vous pour réserver cet événement.');
             redirect_to('pages/login.php');
         }
 
         if ($user['role'] !== 'participant') {
-            set_flash('error', 'Seuls les participants peuvent reserver un evenement.');
+            set_flash('error', 'Seuls les participants peuvent réserver un événement.');
             redirect_to('pages/detail-evenement.php?id=' . $eventId);
         }
 
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $existingReservation = $reservationStmt->fetch();
 
             if ($existingReservation !== false && $existingReservation['statut'] === 'reserve') {
-                throw new RuntimeException('Vous etes deja inscrit a cet evenement.');
+                throw new RuntimeException('Vous êtes déjà inscrit à cet événement.');
             }
 
             $eventLockStmt = $pdo->prepare(
@@ -60,15 +60,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $lockedEvent = $eventLockStmt->fetch();
 
             if ($lockedEvent === false) {
-                throw new RuntimeException('Evenement introuvable.');
+                throw new RuntimeException('Événement introuvable.');
             }
 
             if ($lockedEvent['statut'] === 'annule') {
-                throw new RuntimeException('Impossible de reserver un evenement annule.');
+                throw new RuntimeException('Impossible de réserver un événement annulé.');
             }
 
             if (event_is_paid($lockedEvent)) {
-                throw new RuntimeException('Cet evenement est payant. Utilisez la page de paiement pour finaliser votre billet.');
+                throw new RuntimeException('Cet événement est payant. Utilisez la page de paiement pour finaliser votre billet.');
             }
 
             $capacityStmt = $pdo->prepare(
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $capacityStmt->execute(['id' => $eventId]);
 
             if ($capacityStmt->rowCount() !== 1) {
-                throw new RuntimeException('Cet evenement est complet. Vous pouvez rejoindre la liste d attente.');
+                throw new RuntimeException('Cet événement est complet. Vous pouvez rejoindre la liste d’attente.');
             }
 
             $waitlistStmt = $pdo->prepare(
@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $pdo->commit();
-            set_flash('success', 'Votre reservation a bien ete enregistree.');
+            set_flash('success', 'Votre réservation a bien été enregistrée.');
         } catch (Throwable $exception) {
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
@@ -163,12 +163,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'join_waitlist') {
         if ($user === null) {
-            set_flash('error', 'Connectez-vous pour rejoindre la liste d attente.');
+            set_flash('error', 'Connectez-vous pour rejoindre la liste d’attente.');
             redirect_to('pages/login.php');
         }
 
         if ($user['role'] !== 'participant') {
-            set_flash('error', 'Seuls les participants peuvent rejoindre la liste d attente.');
+            set_flash('error', 'Seuls les participants peuvent rejoindre la liste d’attente.');
             redirect_to('pages/detail-evenement.php?id=' . $eventId);
         }
 
@@ -186,15 +186,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $lockedEvent = $eventLockStmt->fetch();
 
             if ($lockedEvent === false) {
-                throw new RuntimeException('Evenement introuvable.');
+                throw new RuntimeException('Événement introuvable.');
             }
 
             if ($lockedEvent['statut'] === 'annule') {
-                throw new RuntimeException('Impossible de rejoindre la liste d attente d un evenement annule.');
+                throw new RuntimeException('Impossible de rejoindre la liste d’attente d’un événement annulé.');
             }
 
             if ((int) $lockedEvent['places_reservees'] < (int) $lockedEvent['capacite_max']) {
-                throw new RuntimeException('Il reste encore des places disponibles. Vous pouvez reserver directement.');
+                throw new RuntimeException('Il reste encore des places disponibles. Vous pouvez réserver directement.');
             }
 
             $reservationStmt = $pdo->prepare(
@@ -212,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $existingReservation = $reservationStmt->fetch();
 
             if ($existingReservation !== false && $existingReservation['statut'] === 'reserve') {
-                throw new RuntimeException('Vous etes deja inscrit a cet evenement.');
+                throw new RuntimeException('Vous êtes déjà inscrit à cet événement.');
             }
 
             $waitlistStmt = $pdo->prepare(
@@ -230,7 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $existingWaitlist = $waitlistStmt->fetch();
 
             if ($existingWaitlist !== false && $existingWaitlist['statut'] === 'en_attente') {
-                throw new RuntimeException('Vous etes deja sur la liste d attente.');
+                throw new RuntimeException('Vous êtes déjà sur la liste d’attente.');
             }
 
             $positionStmt = $pdo->prepare(
@@ -267,7 +267,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $pdo->commit();
-            set_flash('success', 'Vous avez rejoint la liste d attente. Position actuelle : ' . $position . '.');
+            set_flash('success', 'Vous avez rejoint la liste d’attente. Position actuelle : ' . $position . '.');
         } catch (Throwable $exception) {
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
@@ -327,7 +327,7 @@ include __DIR__ . '/../includes/header.php';
             <div>
                 <div class="mb-4 flex flex-wrap items-center gap-3">
                     <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-                        <?= e($event['categorie']) ?>
+                        <?= e(display_category($event['categorie'])) ?>
                     </span>
                     <?php [$badgeClass, $badgeLabel] = event_badge($event['statut'], $reserved, $capacity); ?>
                     <span class="rounded-full px-3 py-1 text-xs font-semibold <?= e($badgeClass) ?>">
@@ -355,7 +355,7 @@ include __DIR__ . '/../includes/header.php';
                         <p class="mt-2 text-lg font-semibold text-slate-900"><?= e($remaining) ?> / <?= e($capacity) ?></p>
                     </div>
                     <div class="rounded-2xl bg-slate-50 p-4">
-                        <p class="text-sm font-semibold uppercase tracking-wide text-slate-500">Liste d attente</p>
+                        <p class="text-sm font-semibold uppercase tracking-wide text-slate-500">Liste d’attente</p>
                         <p class="mt-2 text-lg font-semibold text-slate-900"><?= e((string) $waitlistCount) ?> personne(s)</p>
                     </div>
                 </div>
@@ -388,7 +388,7 @@ include __DIR__ . '/../includes/header.php';
             </div>
 
             <aside class="rounded-3xl bg-slate-50 p-6">
-                <h2 class="text-xl font-bold text-slate-900">Reservation</h2>
+                <h2 class="text-xl font-bold text-slate-900">Réservation</h2>
                 <p class="mt-2 text-sm text-slate-600">
                     <?= e($reserved) ?> personne(s) inscrite(s) sur <?= e($capacity) ?> place(s).
                 </p>
@@ -401,14 +401,14 @@ include __DIR__ . '/../includes/header.php';
                     <p class="text-sm text-slate-500">Tarif</p>
                     <p class="mt-2 text-2xl font-bold text-slate-900"><?= e(format_price(event_price($event))) ?></p>
                     <?php if (event_is_paid($event)): ?>
-                        <p class="mt-2 text-sm text-slate-600">Le paiement est simule avant la validation du billet.</p>
+                        <p class="mt-2 text-sm text-slate-600">Le paiement est simulé avant la validation du billet.</p>
                     <?php endif; ?>
                 </div>
 
                 <?php if ($userReservation !== null && $userReservation['statut'] === 'reserve'): ?>
                     <?php $qrToken = ensure_reservation_qr_token($pdo, $userReservation); ?>
                     <div class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
-                        Vous etes deja inscrit a cet evenement.
+                        Vous êtes déjà inscrit à cet événement.
                     </div>
                     <div class="mt-4 rounded-2xl bg-white p-4 ring-1 ring-slate-200">
                         <p class="text-sm text-slate-500">Billet</p>
@@ -420,33 +420,33 @@ include __DIR__ . '/../includes/header.php';
                     </div>
                 <?php elseif ($isCancelled): ?>
                     <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-100 p-4 text-sm text-slate-700">
-                        Cet evenement a ete annule.
+                        Cet événement a été annulé.
                     </div>
                 <?php elseif ($userWaitlist !== null): ?>
                     <div class="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
-                        Vous etes deja sur la liste d attente. Position : <?= e((string) $userWaitlist['position_attente']) ?>.
+                        Vous êtes déjà sur la liste d’attente. Position : <?= e((string) $userWaitlist['position_attente']) ?>.
                     </div>
                 <?php elseif ($user === null): ?>
                     <a href="<?= e(url('pages/login.php')) ?>" class="mt-6 block rounded-lg bg-blue-600 px-4 py-3 text-center font-semibold text-white hover:bg-blue-700">
-                        Se connecter pour reserver
+                        Se connecter pour réserver
                     </a>
                 <?php elseif ($user['role'] !== 'participant'): ?>
                     <div class="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
-                        Seuls les comptes participants peuvent reserver.
+                        Seuls les comptes participants peuvent réserver.
                     </div>
                 <?php elseif ($isComplete): ?>
                     <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                        Toutes les places sont deja reservees.
+                        Toutes les places sont déjà réservées.
                     </div>
                     <form method="post" class="mt-4">
                         <input type="hidden" name="action" value="join_waitlist">
                         <button type="submit" class="w-full rounded-lg bg-amber-500 px-4 py-3 font-semibold text-white hover:bg-amber-600">
-                            Rejoindre la liste d attente
+                            Rejoindre la liste d’attente
                         </button>
                     </form>
                 <?php elseif (event_is_paid($event)): ?>
                     <a href="<?= e(url('pages/paiement.php?event_id=' . $eventId)) ?>" class="mt-6 block rounded-lg bg-blue-600 px-4 py-3 text-center font-semibold text-white hover:bg-blue-700">
-                        Payer et reserver
+                        Payer et réserver
                     </a>
                 <?php else: ?>
                     <form method="post" class="mt-6">
@@ -460,13 +460,13 @@ include __DIR__ . '/../includes/header.php';
                 <?php if ($user !== null && can_manage_event($event, $user)): ?>
                     <div class="mt-8 space-y-3 border-t border-slate-200 pt-6">
                         <a href="<?= e(url('pages/modifier-evenement.php?id=' . $eventId)) ?>" class="block rounded-lg bg-slate-900 px-4 py-3 text-center font-semibold text-white hover:bg-slate-700">
-                            Modifier l evenement
+                            Modifier l événement
                         </a>
                         <a href="<?= e(url('pages/inscrits-evenement.php?id=' . $eventId)) ?>" class="block rounded-lg bg-white px-4 py-3 text-center font-semibold text-slate-800 ring-1 ring-slate-300 hover:bg-slate-100">
                             Voir les inscrits
                         </a>
                         <a href="<?= e(url('pages/verification-billet.php?event_id=' . $eventId)) ?>" class="block rounded-lg bg-white px-4 py-3 text-center font-semibold text-slate-800 ring-1 ring-slate-300 hover:bg-slate-100">
-                            Verifier un billet
+                            Vérifier un billet
                         </a>
                     </div>
                 <?php endif; ?>

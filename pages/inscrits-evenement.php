@@ -9,12 +9,12 @@ $eventId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $event = fetch_event_by_id($pdo, $eventId);
 
 if ($event === null) {
-    set_flash('error', 'Evenement introuvable.');
+    set_flash('error', 'Événement introuvable.');
     redirect_to('pages/dashboard-organisateur.php');
 }
 
 if (!can_manage_event($event)) {
-    set_flash('error', 'Vous ne pouvez pas voir les inscrits de cet evenement.');
+    set_flash('error', 'Vous ne pouvez pas voir les inscrits de cet événement.');
     redirect_to('pages/catalogue.php');
 }
 
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'toggl
     $reservation = $reservationStmt->fetch();
 
     if ($reservation === false || $reservation['statut'] !== 'reserve') {
-        set_flash('error', 'Reservation introuvable ou non active.');
+        set_flash('error', 'Réservation introuvable ou non active.');
     } else {
         $newValue = (int) $reservation['presence_validee'] === 1 ? 0 : 1;
         $updateStmt = $pdo->prepare('UPDATE reservations SET presence_validee = :presence_validee WHERE id = :id');
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'toggl
             'presence_validee' => $newValue,
             'id' => $reservationId,
         ]);
-        set_flash('success', $newValue === 1 ? 'Presence validee.' : 'Validation de presence retiree.');
+        set_flash('success', $newValue === 1 ? 'Présence validée.' : 'Validation de présence retirée.');
     }
 
     redirect_to('pages/inscrits-evenement.php?id=' . $eventId);
@@ -109,26 +109,26 @@ include __DIR__ . '/../includes/header.php';
                 Voir la page publique
             </a>
             <a href="<?= e(url('pages/verification-billet.php?event_id=' . $eventId)) ?>" class="rounded-lg bg-white px-5 py-3 font-semibold text-slate-800 ring-1 ring-slate-300 hover:bg-slate-100">
-                Verifier un billet
+                Vérifier un billet
             </a>
         </div>
     </div>
 
     <div class="mb-8 grid gap-4 sm:grid-cols-4">
         <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-            <p class="text-sm text-slate-500">Reservations actives</p>
+            <p class="text-sm text-slate-500">Réservations actives</p>
             <p class="mt-2 text-3xl font-bold text-slate-900"><?= e((string) $reservedCount) ?></p>
         </div>
         <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-            <p class="text-sm text-slate-500">Presences validees</p>
+            <p class="text-sm text-slate-500">Présences validées</p>
             <p class="mt-2 text-3xl font-bold text-slate-900"><?= e((string) $validatedCount) ?></p>
         </div>
         <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-            <p class="text-sm text-slate-500">Reservations annulees</p>
+            <p class="text-sm text-slate-500">Réservations annulées</p>
             <p class="mt-2 text-3xl font-bold text-slate-900"><?= e((string) $cancelledCount) ?></p>
         </div>
         <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-            <p class="text-sm text-slate-500">Liste d attente</p>
+            <p class="text-sm text-slate-500">Liste d’attente</p>
             <p class="mt-2 text-3xl font-bold text-slate-900"><?= e((string) count($waitlistEntries)) ?></p>
         </div>
     </div>
@@ -142,7 +142,7 @@ include __DIR__ . '/../includes/header.php';
                         <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">E-mail</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Statut</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Paiement</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Presence</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Présence</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">QR token</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Action</th>
                     </tr>
@@ -163,17 +163,17 @@ include __DIR__ . '/../includes/header.php';
                             <td class="px-6 py-4 text-sm text-slate-600"><?= e($registration['email']) ?></td>
                             <td class="px-6 py-4">
                                 <span class="rounded-full px-3 py-1 text-xs font-semibold <?= $registration['statut'] === 'reserve' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700' ?>">
-                                    <?= e($registration['statut'] === 'reserve' ? 'Reserve' : 'Annule') ?>
+                                    <?= e($registration['statut'] === 'reserve' ? 'Réservé' : 'Annulé') ?>
                                 </span>
                             </td>
                             <td class="px-6 py-4">
                                 <span class="rounded-full px-3 py-1 text-xs font-semibold <?= ($registration['payment_status'] ?? 'non_requis') === 'paye' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-700' ?>">
-                                    <?= e(($registration['payment_status'] ?? 'non_requis') === 'paye' ? 'Paye' : 'Non requis') ?>
+                                    <?= e(($registration['payment_status'] ?? 'non_requis') === 'paye' ? 'Payé' : 'Non requis') ?>
                                 </span>
                             </td>
                             <td class="px-6 py-4">
                                 <span class="rounded-full px-3 py-1 text-xs font-semibold <?= (int) $registration['presence_validee'] === 1 ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-700' ?>">
-                                    <?= e((int) $registration['presence_validee'] === 1 ? 'Validee' : 'Non validee') ?>
+                                    <?= e((int) $registration['presence_validee'] === 1 ? 'Validée' : 'Non validée') ?>
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-xs text-slate-500"><?= e($qrToken) ?></td>
@@ -183,7 +183,7 @@ include __DIR__ . '/../includes/header.php';
                                         <input type="hidden" name="action" value="toggle_presence">
                                         <input type="hidden" name="reservation_id" value="<?= e((string) $registration['id']) ?>">
                                         <button type="submit" class="rounded-lg <?= (int) $registration['presence_validee'] === 1 ? 'bg-slate-200 text-slate-800 hover:bg-slate-300' : 'bg-blue-600 text-white hover:bg-blue-700' ?> px-4 py-2 text-sm font-semibold">
-                                            <?= e((int) $registration['presence_validee'] === 1 ? 'Retirer la validation' : 'Valider la presence') ?>
+                                            <?= e((int) $registration['presence_validee'] === 1 ? 'Retirer la validation' : 'Valider la présence') ?>
                                         </button>
                                     </form>
                                 <?php else: ?>
@@ -199,7 +199,7 @@ include __DIR__ . '/../includes/header.php';
 
     <div class="mt-10 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
         <div class="mb-5 flex items-center justify-between gap-3">
-            <h2 class="text-2xl font-bold text-slate-900">Liste d attente</h2>
+            <h2 class="text-2xl font-bold text-slate-900">Liste d’attente</h2>
             <span class="rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-700"><?= e((string) count($waitlistEntries)) ?></span>
         </div>
 
@@ -210,13 +210,13 @@ include __DIR__ . '/../includes/header.php';
                         <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Position</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Participant</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">E-mail</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Date d inscription</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Date d’inscription</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200">
                     <?php if ($waitlistEntries === []): ?>
                         <tr>
-                            <td colspan="4" class="px-6 py-8 text-center text-slate-600">Personne n attend actuellement une place.</td>
+                            <td colspan="4" class="px-6 py-8 text-center text-slate-600">Personne n’attend actuellement une place.</td>
                         </tr>
                     <?php endif; ?>
 

@@ -40,7 +40,7 @@ $flashMessages = pull_flash_messages();
 
                 <?php if ($user !== null && organizer_is_approved($user)): ?>
                     <a href="<?= e(url('pages/dashboard-organisateur.php')) ?>" class="nav-link">Dashboard organisateur</a>
-                    <a href="<?= e(url('pages/creer-evenement.php')) ?>" class="nav-link">Creer</a>
+                    <a href="<?= e(url('pages/creer-evenement.php')) ?>" class="nav-link">Créer</a>
                 <?php endif; ?>
 
                 <?php if ($user !== null && $user['role'] === 'participant'): ?>
@@ -53,7 +53,7 @@ $flashMessages = pull_flash_messages();
 
                 <?php if ($user !== null): ?>
                     <a href="<?= e(url('pages/mon-profil.php')) ?>" class="nav-link">Profil</a>
-                    <a href="<?= e(url('pages/logout.php')) ?>" class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">Deconnexion</a>
+                    <a href="<?= e(url('pages/logout.php')) ?>" class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">Déconnexion</a>
                 <?php else: ?>
                     <a href="<?= e(url('pages/login.php')) ?>" class="nav-link">Connexion</a>
                     <a href="<?= e(url('pages/register.php')) ?>" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">Inscription</a>
@@ -69,7 +69,7 @@ $flashMessages = pull_flash_messages();
 
                 <?php if ($user !== null && organizer_is_approved($user)): ?>
                     <a href="<?= e(url('pages/dashboard-organisateur.php')) ?>" class="mobile-link">Dashboard organisateur</a>
-                    <a href="<?= e(url('pages/creer-evenement.php')) ?>" class="mobile-link">Creer un evenement</a>
+                    <a href="<?= e(url('pages/creer-evenement.php')) ?>" class="mobile-link">Créer un événement</a>
                 <?php endif; ?>
 
                 <?php if ($user !== null && $user['role'] === 'participant'): ?>
@@ -82,7 +82,7 @@ $flashMessages = pull_flash_messages();
 
                 <?php if ($user !== null): ?>
                     <a href="<?= e(url('pages/mon-profil.php')) ?>" class="mobile-link">Mon profil</a>
-                    <a href="<?= e(url('pages/logout.php')) ?>" class="mobile-link">Deconnexion</a>
+                    <a href="<?= e(url('pages/logout.php')) ?>" class="mobile-link">Déconnexion</a>
                 <?php else: ?>
                     <a href="<?= e(url('pages/login.php')) ?>" class="mobile-link">Connexion</a>
                     <a href="<?= e(url('pages/register.php')) ?>" class="mobile-link">Inscription</a>

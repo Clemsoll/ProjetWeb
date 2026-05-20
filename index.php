@@ -22,12 +22,12 @@ include __DIR__ . '/includes/header.php';
 <section class="bg-gradient-to-r from-blue-700 to-slate-900 text-white">
     <div class="mx-auto max-w-6xl px-4 py-16 md:px-8 md:py-24">
         <div class="max-w-3xl">
-            <p class="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-blue-200">Billetterie etudiante Omnes</p>
+            <p class="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-blue-200">Billetterie étudiante Omnes</p>
             <h1 class="mb-5 text-4xl font-bold leading-tight md:text-5xl">
-                Decouvrez les evenements Omnes et reservez vos places en quelques clics.
+                Découvrez les événements Omnes et réservez vos places en quelques clics.
             </h1>
             <p class="text-lg text-blue-100">
-                OmnesEvent centralise les soirees, evenements sportifs et rendez-vous culturels des associations etudiantes.
+                OmnesEvent centralise les soirées, événements sportifs et rendez-vous culturels des associations étudiantes.
             </p>
             <div class="mt-8 flex flex-wrap gap-3">
                 <a href="<?= e(url('pages/catalogue.php')) ?>" class="rounded-lg bg-white px-6 py-3 font-semibold text-blue-700 hover:bg-blue-50">
@@ -38,7 +38,7 @@ include __DIR__ . '/includes/header.php';
                 </a>
                 <?php if (!is_logged_in()): ?>
                     <a href="<?= e(url('pages/register.php')) ?>" class="rounded-lg border border-blue-200 px-6 py-3 font-semibold text-white hover:bg-white/10">
-                        Creer un compte
+                        Créer un compte
                     </a>
                 <?php endif; ?>
             </div>
@@ -50,10 +50,10 @@ include __DIR__ . '/includes/header.php';
     <form method="get" action="<?= e(url('pages/catalogue.php')) ?>" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
         <div class="grid gap-4 md:grid-cols-4">
             <div>
-                <label for="categorie" class="mb-2 block text-sm font-semibold text-slate-700">Categorie</label>
+                <label for="categorie" class="mb-2 block text-sm font-semibold text-slate-700">Catégorie</label>
                 <select id="categorie" name="categorie" class="w-full rounded-lg border border-slate-300 px-3 py-2">
                     <option value="">Toutes</option>
-                    <option value="soiree">Soiree</option>
+                    <option value="soiree">Soirée</option>
                     <option value="sport">Sport</option>
                     <option value="culture">Culture</option>
                 </select>
@@ -78,8 +78,8 @@ include __DIR__ . '/includes/header.php';
 <section class="mx-auto max-w-6xl px-4 pb-16 md:px-8">
     <div class="mb-8 flex items-center justify-between gap-4">
         <div>
-            <h2 class="text-3xl font-bold text-slate-900">Evenements a venir</h2>
-            <p class="mt-2 text-slate-600">Les prochains rendez-vous ouverts a la reservation.</p>
+            <h2 class="text-3xl font-bold text-slate-900">Événements à venir</h2>
+            <p class="mt-2 text-slate-600">Les prochains rendez-vous ouverts à la réservation.</p>
         </div>
         <a href="<?= e(url('pages/catalogue.php')) ?>" class="text-sm font-semibold text-blue-600 hover:text-blue-700">
             Voir tout le catalogue &rarr;
@@ -88,7 +88,7 @@ include __DIR__ . '/includes/header.php';
 
     <?php if ($events === []): ?>
         <div class="rounded-2xl bg-white p-10 text-center shadow-sm ring-1 ring-slate-200">
-            <p class="text-slate-600">Aucun evenement a venir pour le moment.</p>
+            <p class="text-slate-600">Aucun événement à venir pour le moment.</p>
         </div>
     <?php else: ?>
         <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -108,7 +108,7 @@ include __DIR__ . '/includes/header.php';
                     <div class="p-5">
                         <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
                             <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-                                <?= e($event['categorie']) ?>
+                                <?= e(display_category($event['categorie'])) ?>
                             </span>
                             <span class="rounded-full px-3 py-1 text-xs font-semibold <?= e($badgeClass) ?>">
                                 <?= e($badgeLabel) ?>
@@ -127,7 +127,7 @@ include __DIR__ . '/includes/header.php';
                             href="<?= e(url('pages/detail-evenement.php?id=' . (int) $event['id'])) ?>"
                             class="mt-5 block rounded-lg bg-slate-900 px-4 py-2.5 text-center font-semibold text-white hover:bg-slate-700"
                         >
-                            Voir le detail
+                            Voir le détail
                         </a>
                     </div>
                 </article>

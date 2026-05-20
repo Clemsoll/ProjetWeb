@@ -50,13 +50,13 @@ while ($cursor <= $calendarEnd) {
 $weekdayLabels = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 $monthLabels = [
     1 => 'Janvier',
-    2 => 'Fevrier',
+    2 => 'Février',
     3 => 'Mars',
     4 => 'Avril',
     5 => 'Mai',
     6 => 'Juin',
     7 => 'Juillet',
-    8 => 'Aout',
+    8 => 'Août',
     9 => 'Septembre',
     10 => 'Octobre',
     11 => 'Novembre',
@@ -70,12 +70,12 @@ include __DIR__ . '/../includes/header.php';
 <section class="mx-auto max-w-6xl px-4 py-12 md:px-8">
     <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-            <h1 class="text-4xl font-bold text-slate-900">Calendrier des evenements</h1>
-            <p class="mt-2 text-slate-600">Explorez les evenements Omnes mois par mois avec une vue simple et mobile first.</p>
+            <h1 class="text-4xl font-bold text-slate-900">Calendrier des événements</h1>
+            <p class="mt-2 text-slate-600">Explorez les événements Omnes mois par mois avec une vue simple et mobile first.</p>
         </div>
         <div class="flex flex-wrap gap-3">
             <a href="<?= e(url('pages/calendrier.php?mois=' . $prevMonth)) ?>" class="rounded-lg bg-white px-4 py-2.5 font-semibold text-slate-800 ring-1 ring-slate-300 hover:bg-slate-100">
-                Mois precedent
+                Mois précédent
             </a>
             <a href="<?= e(url('pages/calendrier.php?mois=' . $nextMonth)) ?>" class="rounded-lg bg-white px-4 py-2.5 font-semibold text-slate-800 ring-1 ring-slate-300 hover:bg-slate-100">
                 Mois suivant
@@ -87,7 +87,7 @@ include __DIR__ . '/../includes/header.php';
         <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
                 <h2 class="text-2xl font-bold text-slate-900"><?= e($calendarTitle) ?></h2>
-                <p class="mt-1 text-sm text-slate-600">Les evenements annules restent visibles pour garder le contexte.</p>
+                <p class="mt-1 text-sm text-slate-600">Les événements annulés restent visibles pour garder le contexte.</p>
             </div>
             <form method="get" class="flex gap-3">
                 <input type="month" name="mois" value="<?= e($monthStart->format('Y-m')) ?>" class="rounded-lg border border-slate-300 px-3 py-2">
@@ -120,7 +120,7 @@ include __DIR__ . '/../includes/header.php';
 
                 <div class="space-y-3">
                     <?php if ($dayEvents === []): ?>
-                        <p class="text-sm text-slate-400">Aucun evenement</p>
+                        <p class="text-sm text-slate-400">Aucun événement</p>
                     <?php endif; ?>
 
                     <?php foreach ($dayEvents as $event): ?>
@@ -130,7 +130,7 @@ include __DIR__ . '/../includes/header.php';
                         ?>
                         <a href="<?= e(url('pages/detail-evenement.php?id=' . (int) $event['id'])) ?>" class="block rounded-2xl bg-slate-50 p-3 hover:bg-slate-100">
                             <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
-                                <span class="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-700"><?= e($event['categorie']) ?></span>
+                                <span class="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-700"><?= e(display_category($event['categorie'])) ?></span>
                                 <span class="rounded-full px-2.5 py-1 text-[11px] font-semibold <?= e($badgeClass) ?>"><?= e($badgeLabel) ?></span>
                             </div>
                             <p class="font-semibold text-slate-900"><?= e($event['titre']) ?></p>

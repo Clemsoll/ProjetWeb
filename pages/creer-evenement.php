@@ -5,7 +5,7 @@ require_once __DIR__ . '/../includes/bootstrap.php';
 
 require_approved_organizer();
 
-$page_title = 'Creer un evenement';
+$page_title = 'Créer un événement';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -25,9 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($titre === '' || $description === '' || $dateInput === '' || $lieu === '' || $association === '' || $capaciteMax <= 0 || $categorie === null) {
         $error = 'Merci de remplir tous les champs obligatoires.';
     } elseif ($dateObject === false) {
-        $error = 'La date et l heure de l evenement sont invalides.';
+        $error = 'La date et l heure de l événement sont invalides.';
     } elseif ($prix < 0) {
-        $error = 'Le prix ne peut pas etre negatif.';
+        $error = 'Le prix ne peut pas être négatif.';
     } else {
         try {
             $imagePath = upload_event_image($_FILES['image'] ?? []);
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'organisateur_id' => current_user()['id'],
             ]);
 
-            set_flash('success', 'Evenement cree avec succes.');
+            set_flash('success', 'Événement créé avec succès.');
             redirect_to('pages/dashboard-organisateur.php');
         } catch (Throwable $exception) {
             $error = $exception->getMessage();
@@ -92,8 +92,8 @@ include __DIR__ . '/../includes/header.php';
 
 <section class="mx-auto max-w-3xl px-4 py-12 md:px-8">
     <div class="mb-8">
-        <h1 class="text-4xl font-bold text-slate-900">Creer un evenement</h1>
-        <p class="mt-2 text-slate-600">Publiez un evenement, ajoutez une adresse pour la carte et choisissez si la reservation est gratuite ou payante.</p>
+        <h1 class="text-4xl font-bold text-slate-900">Créer un événement</h1>
+        <p class="mt-2 text-slate-600">Publiez un événement, ajoutez une adresse pour la carte et choisissez si la réservation est gratuite ou payante.</p>
     </div>
 
     <div class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
@@ -115,10 +115,10 @@ include __DIR__ . '/../includes/header.php';
                     <input type="text" id="association" name="association" value="<?= e(old('association')) ?>" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
                 </div>
                 <div>
-                    <label for="categorie" class="mb-2 block text-sm font-semibold text-slate-700">Categorie</label>
+                    <label for="categorie" class="mb-2 block text-sm font-semibold text-slate-700">Catégorie</label>
                     <select id="categorie" name="categorie" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
                         <option value="">Choisir</option>
-                        <option value="soiree" <?= old('categorie') === 'soiree' ? 'selected' : '' ?>>Soiree</option>
+                        <option value="soiree" <?= old('categorie') === 'soiree' ? 'selected' : '' ?>>Soirée</option>
                         <option value="sport" <?= old('categorie') === 'sport' ? 'selected' : '' ?>>Sport</option>
                         <option value="culture" <?= old('categorie') === 'culture' ? 'selected' : '' ?>>Culture</option>
                     </select>
@@ -131,7 +131,7 @@ include __DIR__ . '/../includes/header.php';
                     <input type="datetime-local" id="date_evenement" name="date_evenement" value="<?= e(old('date_evenement')) ?>" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
                 </div>
                 <div>
-                    <label for="capacite_max" class="mb-2 block text-sm font-semibold text-slate-700">Capacite maximale</label>
+                    <label for="capacite_max" class="mb-2 block text-sm font-semibold text-slate-700">Capacité maximale</label>
                     <input type="number" min="1" id="capacite_max" name="capacite_max" value="<?= e(old('capacite_max')) ?>" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
                 </div>
                 <div>
@@ -146,9 +146,9 @@ include __DIR__ . '/../includes/header.php';
             </div>
 
             <div>
-                <label for="adresse_complete" class="mb-2 block text-sm font-semibold text-slate-700">Adresse complete pour la carte</label>
+                <label for="adresse_complete" class="mb-2 block text-sm font-semibold text-slate-700">Adresse complète pour la carte</label>
                 <input type="text" id="adresse_complete" name="adresse_complete" value="<?= e(old('adresse_complete')) ?>" class="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="Ex : 10 rue Sextius Michel, 75015 Paris">
-                <p class="mt-2 text-xs text-slate-500">Si vous laissez vide, le champ lieu sera reutilise pour la carte.</p>
+                <p class="mt-2 text-xs text-slate-500">Si vous laissez vide, le champ lieu sera réutilisé pour la carte.</p>
             </div>
 
             <div>
@@ -157,19 +157,19 @@ include __DIR__ . '/../includes/header.php';
             </div>
 
             <div>
-                <label for="details_complets" class="mb-2 block text-sm font-semibold text-slate-700">Informations complementaires</label>
+                <label for="details_complets" class="mb-2 block text-sm font-semibold text-slate-700">Informations complémentaires</label>
                 <textarea id="details_complets" name="details_complets" rows="5" class="w-full rounded-lg border border-slate-300 px-3 py-2"><?= e(old('details_complets')) ?></textarea>
             </div>
 
             <div>
                 <label for="image" class="mb-2 block text-sm font-semibold text-slate-700">Affiche</label>
                 <input type="file" id="image" name="image" accept=".jpg,.jpeg,.png,.webp,.gif" class="w-full rounded-lg border border-slate-300 px-3 py-2">
-                <p class="mt-2 text-xs text-slate-500">Formats acceptes : JPG, PNG, WEBP, GIF. Taille maximale : 5 Mo.</p>
+                <p class="mt-2 text-xs text-slate-500">Formats acceptés : JPG, PNG, WEBP, GIF. Taille maximale : 5 Mo.</p>
             </div>
 
             <div class="flex flex-wrap gap-3">
                 <button type="submit" class="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700">
-                    Creer l evenement
+                    Créer l événement
                 </button>
                 <a href="<?= e(url('pages/dashboard-organisateur.php')) ?>" class="rounded-lg bg-slate-200 px-6 py-3 font-semibold text-slate-800 hover:bg-slate-300">
                     Retour au dashboard

@@ -17,7 +17,7 @@ try {
         ]
     );
 } catch (PDOException $exception) {
-    exit('Connexion impossible a la base de donnees "omnesevent". Importez d abord le fichier database/omnesevent.sql dans phpMyAdmin.');
+    exit('Connexion impossible à la base de données "omnesevent". Importez d’abord le fichier database/omnesevent.sql dans phpMyAdmin.');
 }
 
 try {
