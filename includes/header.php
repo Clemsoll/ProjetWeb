@@ -18,9 +18,8 @@ $flashMessages = pull_flash_messages();
 <body class="bg-slate-50 text-slate-800">
     <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-8">
-            <a href="<?= e(url('index.php')) ?>" class="flex items-center gap-3">
+            <a href="<?= e(url('index.php')) ?>">
                 <img src="<?= e(url('images/logoOE.webp')) ?>" alt="Logo OmnesEvent" class="h-14 w-auto md:h-20">
-                <span class="text-xl font-bold text-slate-800">OmnesEvent</span>
             </a>
 
             <button
