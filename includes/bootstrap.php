@@ -8,7 +8,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 date_default_timezone_set('Europe/Madrid');
 
 define('APP_NAME', 'OmnesEvent');
-define('BASE_URL', '');
+define('BASE_URL', '/OmnesEvent');
 define('ROOT_PATH', dirname(__DIR__));
 
 require_once __DIR__ . '/functions.php';

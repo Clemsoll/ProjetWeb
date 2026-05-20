@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-$dbHost = 'fdb1031.your-hosting.net';
-$dbName = '4761126_omnesevent';
-$dbUser = '4761126_omnesevent';
-$dbPassword = 'Web15012006!';
+$dbHost = 'localhost';
+$dbName = 'omnesevent';
+$dbUser = 'root';
+$dbPassword = '';
 
 try {
     $pdo = new PDO(

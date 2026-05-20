@@ -1,4 +1,5 @@
-USE 4761126_omnesevent;
+CREATE DATABASE IF NOT EXISTS omnesevent CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE omnesevent;
 
 DROP TABLE IF EXISTS listes_attente;
 DROP TABLE IF EXISTS reservations;
